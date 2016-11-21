@@ -1,2 +1,1 @@
-# Taxi-Project
-This is a project on taxi trajectory data learning 
+taxi data project
