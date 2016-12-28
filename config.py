@@ -1,0 +1,2 @@
+data_info = ['ID', 'longitude', 'latitude', 'speed', 'direction', 'date', 'time', 'init_status', 'final_status']
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
