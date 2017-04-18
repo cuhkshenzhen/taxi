@@ -1,0 +1,156 @@
+{% macro pagination_widget(pagination, endpoint, fragment='') %}
+    <ul class="pagination">
+        <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+            <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                &laquo;
+            </a>
+        </li>
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+                {% if p == pagination.page %}
+                    <li class="active">
+                        <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+            {% endif %}
+        {% endfor %}
+        <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+            <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                &raquo;
+            </a>
+        </li>
+    </ul>
+{% endmacro %}
+
+{% macro pagination_tab_widget(pagination, endpoint, tab, fragment='') %}
+    <ul class="pagination">
+        <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+            <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, tab=tab , **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                &laquo;
+            </a>
+        </li>
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+                {% if p == pagination.page %}
+                    <li class="active">
+                        <a href="{{ url_for(endpoint, page = p, tab=tab, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ url_for(endpoint, page = p, tab=tab, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+            {% endif %}
+        {% endfor %}
+        <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+            <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, tab=tab, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                &raquo;
+            </a>
+        </li>
+    </ul>
+{% endmacro %}
+
+{# A replacement for bootstrap/wtf quick_forms, this renders a single field
+   which works with bootstrap error #}
+{% macro render_field(form_field, placeholder, type='', value='') -%}
+    <div class="form-group {% if form_field.errors %}has-error{% endif %}">
+        {% if type %}
+            {{ form_field(class_="form-control", placeholder=placeholder, type=type, value=value)}}
+        {% else %}
+            {{ form_field(class_="form-control", placeholder=placeholder, value=value)}}
+        {% endif %}
+        {% if form_field.errors %}
+            {% for error in form_field.errors %}
+                <p class="help-block" id="{{ form_field.name }}-error">{{ error }}</p>
+            {% endfor %}
+        {% else %}
+            <p class="help-block" id="{{ form_field.name }}-error"></p>
+        {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro render_checkbox(form_field, label) -%}
+    <div class="checkbox i-checks">
+        <label>
+            {{ form_field(class="checkbox")}}
+            {{ label }}
+        </label>
+    </div>
+{%- endmacro %}
+
+{% macro handle_notifications(flashed_messages) -%}
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "onclick": null,
+            "showDuration": "700",
+            "hideDuration": "1000",
+            "timeOut": "4000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "slideDown",
+            "hideMethod": "fadeOut"
+        }
+
+        {% for category, message in flashed_messages %}
+            var toastr_category = '{{ category }}';
+
+            if (toastr_category === 'message') {
+                toastr_category = 'info';
+            }
+
+            toastr[toastr_category]('{{message}}');
+        {% endfor %}
+    </script>
+{%- endmacro %}
+
+{% macro pagination_widget(pagination, endpoint) %}
+<div class="btn-group">
+    <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page = pagination.page - 1, **kwargs ) }}{% else %}#{% endif %}" class="btn btn-white {% if not pagination.has_prev %}disabled{% endif %}">
+        <i class="fa fa-chevron-left"></i>
+    </a>
+    {% for p in pagination.iter_pages() %}
+        {% if p %}
+            <a href="{{ url_for(endpoint, page = p, **kwargs) }}" class="btn btn-white {% if p == pagination.page %}active{% endif %}">
+                {{ p }}
+            </a>
+        {% else %}
+        <a class="btn btn-white disabled" href="#">&hellip;</a>
+        {% endif %}
+    {% endfor %}
+    <a class="btn btn-white {% if not pagination.has_next %}disabled{% endif %}" href="{% if pagination.has_next %}{{ url_for(endpoint, page = pagination.page + 1, **kwargs) }}{% else %}#{% endif %}">
+            <i class="fa fa-chevron-right"></i>
+        </a>
+    </a>
+</div>
+<!-- <a class="btn btn-white" href="{{ url_for(endpoint, view_all=True,  **kwargs) }}">View All</a> -->
+{% endmacro %}
+
+{% macro breadcrumb_widget(breadcrumbs) %}
+<ol class="breadcrumb">
+    {% for breadcrumb in breadcrumbs %}
+        {% set is_last_element = (breadcrumb == breadcrumbs[-1]) %}
+        {% set has_link = not breadcrumb[1] == '#' %}
+
+        <li {% if is_last_element %}class="active"{% endif %}>
+            {% if has_link %}<a href="{{ breadcrumb[1] }}">{% endif %}
+                {% if is_last_element %}<strong>{% endif %}
+                    {{ breadcrumb[0] }}
+                {% if is_last_element %}</strong>{% endif %}
+            {% if has_link%}</a>{% endif %}
+        </li>
+    {% endfor %}
+</ol>
+{% endmacro %}

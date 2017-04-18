@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+taxi.db
+taxi.sqlite
+taxi.ori.db
+taxi.txt
+
+*.db
+*.db-journal
