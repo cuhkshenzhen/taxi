@@ -1,0 +1,97 @@
+{% extends "empty_base.html" %}
+{% block styles %}
+    {{ super() }}
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="width:100%;height:100%;border:1px solid gray" id="container"></div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=3a66dec6630705f4cd2b9a406d138331"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
+
+    <script type="text/javascript">
+        // 百度地图API功能
+        var map = new BMap.Map("container");
+        map.centerAndZoom(new BMap.Point(114.0312, 22.5585), 12);
+        map.enableScrollWheelZoom();
+        console.log('Taxi ID:' + {{ taxi_id }});
+        console.log('Count:' + {{ records|count }});
+
+
+        var data_info = [
+            {% for record in records %}
+                [{{ record.longitude }}, {{ record.latitude }}, '{{ record|safe }}'],
+            {% endfor %}
+        ];
+        var points = Array();
+        var converted_points = [];
+
+        var opts = {
+            width: 300,     // 信息窗口宽度
+            height: 200,     // 信息窗口高度
+            title: "Information", // 信息窗口标题
+            enableMessage: true//设置允许信息窗发送短息
+        };
+
+        for (var i = 0; i < data_info.length; i++) {
+            var point = new BMap.Point(data_info[i][0], data_info[i][1]);
+            points.push(point);}
+{#            var marker = new BMap.Marker(point);#}
+{#            map.addOverlay(marker);#}
+{#            addClickHandler(data_info[i][2], marker);#}
+{#        }#}
+{#        var polyline = new BMap.Polyline(points, {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});   //创建折线#}
+{#        map.addOverlay(polyline);   //增加折线#}
+
+
+        //坐标转换完之后的回调函数
+        translateCallback = function (data) {
+            console.log(data);
+            if (data.status === 0) {
+                for (var i = 0; i < data.points.length; i++) {
+                    var marker = new BMap.Marker(data.points[i]);  // 创建标注
+                    var content = data_info[i][2];
+                    map.addOverlay(marker) ;               // 将标注添加到地图中
+                    addClickHandler(content, marker);
+
+                    converted_points.push(data.points[i]);
+                    console.log(data.points[i]);
+
+                }
+                var polyline = new BMap.Polyline(converted_points, {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});   //创建折线
+                map.addOverlay(polyline);   //增加折线
+
+            }
+        };
+
+        setTimeout(function () {
+            var convertor = new BMap.Convertor();
+            convertor.translate(points, {{ from_type }}, {{ to_type }}, translateCallback);
+            console.log("convert invoked");
+        }, 10);
+
+        function addClickHandler(content, marker) {
+            marker.addEventListener("click", function (e) {
+                    openInfo(content, e)
+                }
+            );
+        }
+        function openInfo(content, e) {
+            var p = e.target;
+            var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+            var infoWindow = new BMap.InfoWindow(content, opts);  // 创建信息窗口对象
+            map.openInfoWindow(infoWindow, point); //开启信息窗口
+        }
+    </script>
+
+{% endblock %}

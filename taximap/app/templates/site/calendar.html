@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block styles %}
+    {{ super() }}
+
+        <link rel="stylesheet" href="{{ url_for("static", filename='css/schedule.css') }}"
+              type="text/css">
+{% endblock %}
+{% block content %}
+    <section class="mbr-section col-undefined mbr-parallax-background" id="content5-14"
+             style="background-image: url({{ url_for('static', filename="images/1.jpg")}});color: #f7f7f7">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-xs-center">
+                    <h3 class="mbr-section-title display-2">CLASS SCHEDULE</h3>
+                    <div class="lead"><p>Here shows your class schedule -- much nicer.</p></div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="mbr-section mbr-section-small" id="testimonials1-26" style="background-color: rgb(255, 255, 255);">
+        <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(255, 255, 255);"></div>
+
+        <div class="row">
+            <div class="row">
+                <div class="cd-schedule loading">
+                    <div class="timeline">
+                        <ul>
+                            <li><span>08:30</span></li>
+                            <li><span>09:00</span></li>
+                            <li><span>09:30</span></li>
+                            <li><span>10:00</span></li>
+                            <li><span>10:30</span></li>
+                            <li><span>11:00</span></li>
+                            <li><span>11:30</span></li>
+                            <li><span>12:00</span></li>
+                            <li><span>12:30</span></li>
+                            <li><span>13:00</span></li>
+                            <li><span>13:30</span></li>
+                            <li><span>14:00</span></li>
+                            <li><span>14:30</span></li>
+                            <li><span>15:00</span></li>
+                            <li><span>15:30</span></li>
+                            <li><span>16:00</span></li>
+                            <li><span>16:30</span></li>
+                            <li><span>17:00</span></li>
+                            <li><span>17:30</span></li>
+                            <li><span>18:00</span></li>
+                            <li><span>18:30</span></li>
+                            <li><span>19:00</span></li>
+                            <li><span>19:30</span></li>
+                            <li><span>20:00</span></li>
+                            <li><span>20:30</span></li>
+                            <li><span>21:00</span></li>
+                            <li><span>21:30</span></li>
+                        </ul>
+                    </div> <!-- .timeline -->
+
+                    <div class="events">
+                        <ul>
+                            {% for date, t in (time) %}
+                                <li class="events-group">
+                                    <div class="top-info"><span>{{ date | date_str }}</span></div>
+
+                                    <ul>
+                                        {% for i in t %}
+                                            <li class="single-event" data-start="{{ i.start_at.strftime("%H:%M") }}" data-end="{{ i.end_at.strftime("%H:%M") }}"
+                                                data-content="event-abs-circuit" data-event="event-{{ i.type }}"
+                                                data-location="{{ i.classroom.__repr__() }}">
+                                                <a href="#0">
+                                                    <em class="event-name">{{ i.course.title }} {{ {'lec': 'Lecture', 'tut': 'Tutorial'}[i.type] }}</em>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="event-modal">
+                        <header class="header">
+                            <div class="content">
+                                <span class="event-date"></span>
+                                <h3 class="event-name"></h3>
+                            </div>
+
+                            <div class="header-bg"></div>
+                        </header>
+
+                        <div class="body">
+                            <div class="event-info"></div>
+                            <div class="body-bg"></div>
+                        </div>
+
+                        <a href="#0" class="close"></a>
+                    </div>
+
+                    <div class="cover-layer"></div>
+                </div> <!-- .cd-schedule -->
+            </div>
+        </div>
+    </section>
+{% endblock %}
