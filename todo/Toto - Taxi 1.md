@@ -16,11 +16,12 @@ Assumption 2:
 Data Summary:
 
 1. First = 0, Speed <= 4
-2. FIrst = 0, 9%, 
+2. First = 0, 9%, 
 3. First = 1, 91%
 4. Second = 1, 33%
 5. Second = 0, 67%
-6. Total data: 1065w
+6. Total data: 10,659,736
+7. Cars: 21,673
 
 
 
