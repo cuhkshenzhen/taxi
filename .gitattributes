@@ -1,0 +1,6 @@
+taximap/taxi.2017-04-06.db filter=lfs diff=lfs merge=lfs -text
+taximap/taxi.db filter=lfs diff=lfs merge=lfs -text
+taximap/taxi.ori.db filter=lfs diff=lfs merge=lfs -text
+taximap/taxi.sqlite filter=lfs diff=lfs merge=lfs -text
+*.db filter=lfs diff=lfs merge=lfs -text
+*.sqlite filter=lfs diff=lfs merge=lfs -text

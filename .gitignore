@@ -94,3 +94,5 @@ taxi.txt
 
 *.db
 *.db-journal
+
+data/data/
